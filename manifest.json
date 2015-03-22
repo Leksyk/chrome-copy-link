@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Copy page link",
-  "description": "This extension allows you to copy current page address and title as rich text link",
+  "description": "This extension allows you to copy the current tab address and title as rich text link",
   "version": "1.0",
 
   "background": {
