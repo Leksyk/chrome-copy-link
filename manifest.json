@@ -13,7 +13,22 @@
   "browser_action": {
     "default_icon": "icon.png"
   },
+
+  "commands": {
+    "copy-link": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+C",
+        "mac": "Command+MacCtrl+C"
+      },
+      "description": "Copy the current page's link/title to clipboard"
+    }
+  },
+
   "permissions": [
     "clipboardWrite"
+  ],
+  "optional_permissions": [
+    "tabs",
+    "notifications"
   ]
 }
