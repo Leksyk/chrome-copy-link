@@ -5,7 +5,7 @@ copied to clipboard so you can later on simply paste it in a google doc or text 
 
 Published in chrome web store: https://chrome.google.com/webstore/detail/copy-page-link/ijkpnaifgolhlcfhcfamddnlnfjpjaji
 
-## Icons
+## Icons Copyright
 * Chrome toolbar icon is provided by: https://www.iconfinder.com/icons/82585/copy_link_icon
 * The app icon is provided by: https://www.iconfinder.com/icons/175147/copy_link_icon#size=128
 

@@ -30,5 +30,6 @@
   "optional_permissions": [
     "tabs",
     "notifications"
-  ]
+  ],
+  "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'"
 }
