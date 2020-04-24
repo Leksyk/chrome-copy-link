@@ -3,7 +3,7 @@
 
   "name": "Copy page link",
   "description": "This extension allows you to copy the current tab address and title as rich text link",
-  "version": "1.1.1",
+  "version": "1.2.1",
 
   "background": {
     "persistent": false,
@@ -21,12 +21,16 @@
         "mac": "Command+MacCtrl+C"
       },
       "description": "Copy the current page's link/title to clipboard"
+    },
+    "copy-as-plain": {
+      "description": "Copy Link and Title as Plain Text"
     }
   },
 
   "permissions": [
     "clipboardWrite",
-    "tabs"
+    "tabs",
+    "contextMenus"
   ],
   "optional_permissions": [
     "notifications"

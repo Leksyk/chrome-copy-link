@@ -1,15 +1,23 @@
 // onClicked action gives us the tab without any permissions needed.
 chrome.browserAction.onClicked.addListener(function(tab) {
-  emitCopyEvent('icon');
-  copyTabLinkToClipboard(tab);
+  emitCopyEvent('html-copy-link', 'icon');
+  copyTabLinkToClipboard(tab, true);
 });
 
 chrome.commands.onCommand.addListener(function(command) {
   switch (command) {
     case 'copy-link':
-      emitCopyEvent('shortcut');
-      getActiveTab(copyTabLinkToClipboard);
+      emitCopyEvent('html-copy-link', 'shortcut');
+      getActiveTab(function(tab) {
+        return copyTabLinkToClipboard(tab, true);
+      });
       break;
+
+    case 'copy-as-plain':
+      emitCopyEvent('copy-plain-text', 'shortcut');
+      getActiveTab(function(tab) {
+        return copyTabLinkToClipboard(tab, False);
+      })
 
     default:
       throw new Error('Unknown command: ' + command);
@@ -35,6 +43,7 @@ function setupGoogleAnalytics() {
 }
 
 function analyticsEvent(category, action, opt_label, opt_value) {
+  console.log('ga', arguments);
   setupGoogleAnalytics();
   ga('send', {
       'hitType': 'event',
@@ -48,9 +57,9 @@ function analyticsEvent(category, action, opt_label, opt_value) {
 // Number of copy actions made so far within this session.
 var numCopyActions = 0;
 
-function emitCopyEvent(source) {
+function emitCopyEvent(method, source) {
   numCopyActions += 1;
-  analyticsEvent('copy', 'copy-link', source, numCopyActions);
+  analyticsEvent('copy', method, source, numCopyActions);
 }
 
 function emitPermissionsEvent(permissions, granted) {
@@ -103,11 +112,29 @@ function showNotification(title, text) {
   });
 }
 
-function copyTabLinkToClipboard(tab) {
+function copyTabLinkToClipboard(tab, as_html) {
   var url = tab.url;
   var title = tab.title;
   console.log('Copying to clipboard', url, title);
-  copyLinkToClipboard(url, title);
+  if (as_html) {
+    copyLinkToClipboard(url, title);
+  } else {
+    copyLinkAsPlainTextToClipboard(url, title);
+  }
+}
+
+function copyLinkAsPlainTextToClipboard(url, title) {
+  var span = document.createElement('span');
+  span.innerText = title + ' ' + url;
+  document.body.appendChild(span);
+  try {
+    span.focus();
+    document.execCommand('SelectAll');
+    document.execCommand("Copy", false, null);
+    showNotification('Link is ready to be pasted', '"' + title + '" was copied to clipboard');
+  } finally {
+    span.remove();
+  }
 }
 
 function copyLinkToClipboard(url, title) {
@@ -124,3 +151,28 @@ function copyLinkToClipboard(url, title) {
     link.remove();
   }
 }
+
+function copyAsPlainText(tab) {
+  emitCopyEvent('copy-plain-text', 'menu');
+  copyTabLinkToClipboard(tab, false);
+}
+
+COPY_AS_PLAIN_MENU_ITEM_ID = 'CopyAsPlainText';
+
+chrome.contextMenus.removeAll();
+chrome.contextMenus.create({
+  id: COPY_AS_PLAIN_MENU_ITEM_ID,
+  title: "Copy Link and Title as Plain Text",
+  contexts: ["browser_action"],
+});
+
+chrome.contextMenus.onClicked.addListener(function(info, tab) {
+  switch (info.menuItemId) {
+    case COPY_AS_PLAIN_MENU_ITEM_ID:
+      copyAsPlainText(tab);
+      break;
+
+    default:
+      throw Error('Unknown menu item' + info.menuItemId);
+  }
+});
