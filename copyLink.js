@@ -1,3 +1,35 @@
+COPY_AS_PLAIN_MENU_ITEM_ID = 'CopyAsPlainText';
+COPY_LINK_MENU_ITEM_ID = 'CopyLink';
+
+chrome.contextMenus.removeAll();
+chrome.contextMenus.create({
+  id: COPY_LINK_MENU_ITEM_ID,
+  title: "Copy Link",
+  contexts: ["browser_action"],
+});
+chrome.contextMenus.create({
+  id: COPY_AS_PLAIN_MENU_ITEM_ID,
+  title: "Copy Link and Title as Plain Text",
+  contexts: ["browser_action"],
+});
+
+chrome.contextMenus.onClicked.addListener(function(info, tab) {
+  switch (info.menuItemId) {
+    case COPY_AS_PLAIN_MENU_ITEM_ID:
+      emitCopyEvent('copy-plain-text', 'menu');
+      copyTabLinkToClipboard(tab, false);
+      break;
+
+    case COPY_LINK_MENU_ITEM_ID:
+      emitCopyEvent('html-copy-link', 'menu');
+      copyTabLinkToClipboard(tab, true);
+      break;
+
+    default:
+      throw Error('Unknown menu item' + info.menuItemId);
+  }
+});
+
 // onClicked action gives us the tab without any permissions needed.
 chrome.browserAction.onClicked.addListener(function(tab) {
   emitCopyEvent('html-copy-link', 'icon');
@@ -152,27 +184,3 @@ function copyLinkToClipboard(url, title) {
   }
 }
 
-function copyAsPlainText(tab) {
-  emitCopyEvent('copy-plain-text', 'menu');
-  copyTabLinkToClipboard(tab, false);
-}
-
-COPY_AS_PLAIN_MENU_ITEM_ID = 'CopyAsPlainText';
-
-chrome.contextMenus.removeAll();
-chrome.contextMenus.create({
-  id: COPY_AS_PLAIN_MENU_ITEM_ID,
-  title: "Copy Link and Title as Plain Text",
-  contexts: ["browser_action"],
-});
-
-chrome.contextMenus.onClicked.addListener(function(info, tab) {
-  switch (info.menuItemId) {
-    case COPY_AS_PLAIN_MENU_ITEM_ID:
-      copyAsPlainText(tab);
-      break;
-
-    default:
-      throw Error('Unknown menu item' + info.menuItemId);
-  }
-});
