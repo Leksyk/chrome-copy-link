@@ -4,7 +4,7 @@ COPY_LINK_MENU_ITEM_ID = 'CopyLink';
 chrome.contextMenus.removeAll();
 chrome.contextMenus.create({
   id: COPY_LINK_MENU_ITEM_ID,
-  title: "Copy Link",
+  title: "Copy Link as Rich Text",
   contexts: ["browser_action"],
 });
 chrome.contextMenus.create({

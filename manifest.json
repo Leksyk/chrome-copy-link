@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
 
-  "name": "Copy page link",
-  "description": "This extension allows you to copy the current tab address and title as rich text link",
-  "version": "1.2.1",
+  "name": "Tab Link Copier",
+  "description": "Copies the current tab's url and title as a rich text link. Useful for pasting in Google Docs",
+  "version": "1.2.3",
 
   "background": {
     "persistent": false,
@@ -14,13 +14,17 @@
     "default_icon": "icon.png"
   },
 
+  "icons": {
+    "128": "icon.png"
+  },
+
   "commands": {
     "copy-link": {
       "suggested_key": {
         "default": "Ctrl+Shift+C",
         "mac": "Command+MacCtrl+C"
       },
-      "description": "Copy the current page's link/title to clipboard"
+      "description": "Copy Link as Rich Text"
     },
     "copy-as-plain": {
       "description": "Copy Link and Title as Plain Text"
